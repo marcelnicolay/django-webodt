@@ -2,9 +2,6 @@
 # -*- coding: utf8 -*-
 from distutils.core import setup
 
-import os, sys
-reload(sys).setdefaultencoding("UTF-8")
-
 def read(fname):
     try:
         return open(os.path.join(os.path.dirname(__file__), fname)).read()
