@@ -56,7 +56,7 @@ class GoogleDocsODFConverter(ODFConverter):
         response = urllib2.urlopen(request)
         data = response.read()
         response.close()
-        tree = etree.parse(StringIO(data))
+        tree = etree.parse(StringIO(data).decode('utf8'))
         # get document resource id
         resource_id = tree.xpath('gd:resourceId/text()', namespaces={'gd': 'http://schemas.google.com/g/2005'})
         if len(resource_id) != 1:
