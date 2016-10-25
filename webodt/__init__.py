@@ -101,7 +101,10 @@ class ODFTemplate(object):
     def get_files_to_process(self):
         #parse manifest
         paths = []
-        ee = etree.parse(StringIO(self.get_file("META-INF/manifest.xml")).decode('utf8'))
+        manifest = self.get_file("META-INF/manifest.xml")
+        manifest_stream = StringIO(manifest)
+        print(manifest_stream.getvalue())
+        ee = etree.parse(manifest_stream.getvalue())
         for xml_ref in ee.findall("//{urn:oasis:names:tc:opendocument:xmlns:manifest:1.0}file-entry[@{urn:oasis:names:tc:opendocument:xmlns:manifest:1.0}media-type='text/xml']"):
             paths.append(xml_ref.attrib['{urn:oasis:names:tc:opendocument:xmlns:manifest:1.0}full-path'])
         return paths
