@@ -42,7 +42,7 @@ class ODFDocumentTest(unittest.TestCase):
         }
         document = template.render(Context(context))
         self.assertTrue(os.path.isfile(document.name))
-        self.assertEqual(os.stat(document.name).st_mode & 0777, 0600)
+        self.assertEqual(os.stat(document.name).st_mode, '0777')
         self.assertEqual(document.format, 'odt')
         self.assertTrue('John Doe' in document.get_content_xml())
         document.delete()
@@ -70,7 +70,7 @@ class HTMLDocumentTest(unittest.TestCase):
         }
         document = template.render(Context(context), delete_on_close=True)
         self.assertTrue(os.path.isfile(document.name))
-        self.assertEqual(os.stat(document.name).st_mode & 0777, 0600)
+        self.assertEqual(os.stat(document.name).st_mode, '0777')
         self.assertEqual(document.format, 'html')
         self.assertTrue('John Doe' in document.get_content())
         document.delete()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from cStringIO import StringIO
+from io import StringIO
 from lxml import etree
 from webodt import Document
 from webodt.conf import WEBODT_GOOGLEDOCS_EMAIL, WEBODT_GOOGLEDOCS_PASSWORD

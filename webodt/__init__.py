@@ -13,7 +13,7 @@ import tempfile
 import shutil
 import time
 from lxml import etree
-from cStringIO import StringIO
+from io import StringIO
 from django.template import Template
 from django.utils.encoding import smart_str
 from webodt.conf import WEBODT_TEMPLATE_PATH, WEBODT_ODF_TEMPLATE_PREPROCESSORS, WEBODT_TMP_DIR
@@ -208,19 +208,46 @@ class _UnpackedODFHandler(object):
         shutil.copytree(self.dirname, dstdir)
 
 
-class Document(file):
-
-    def __init__(self, filename, mode='rb', buffering=1, delete_on_close=True):
-        file.__init__(self, filename, mode, buffering)
-        self.delete_on_close = delete_on_close
+class Document():
 
     def close(self):
-        file.close(self)
+        self.file.close()
         if self.delete_on_close:
             self.delete()
 
     def delete(self):
         os.unlink(self.name)
+
+    """Check if `f` is a file name and open the file in `mode`.
+    A context manager."""
+    def __init__(self, f, mode, buffering=1, delete_on_close=True):
+        if isinstance(f, str):
+            self.file = open(f, mode)
+        else:
+            self.file = f
+        self.close_file = (self.file is not f)
+        self.delete_on_close = delete_on_close
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, *args, **kwargs):
+        if (not self.close_file):
+            return  # do nothing
+        # clean up
+        exit = getattr(self.file, '__exit__', None)
+        if exit is not None:
+            return exit(*args, **kwargs)
+        else:
+            exit = getattr(self.file, 'close', None)
+            if exit is not None:
+                exit()
+    
+    def __getattr__(self, attr):
+        return getattr(self.file, attr)
+    
+    def __iter__(self):
+        return iter(self.file)
 
 
 class HTMLDocument(Document):
