@@ -16,5 +16,5 @@ class AbiwordODFConverter(ODFConverter):
         )
         input_args = 'convert %s %s %s\n' % (document.name, output_filename, format)
         process.communicate(input_args.encode('utf-8'))
-        fd = Document(output_filename, mode='r', delete_on_close=delete_on_close)
+        fd = Document(output_filename, mode='br', delete_on_close=delete_on_close)
         return fd
