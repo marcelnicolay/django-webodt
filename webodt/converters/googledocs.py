@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from io import StringIO
+from io import StringIO, BytesIO
 from lxml import etree
 from webodt import Document
 from webodt.conf import WEBODT_GOOGLEDOCS_EMAIL, WEBODT_GOOGLEDOCS_PASSWORD
@@ -56,7 +56,7 @@ class GoogleDocsODFConverter(ODFConverter):
         response = urllib2.urlopen(request)
         data = response.read()
         response.close()
-        tree = etree.parse(StringIO(data).decode('utf8'))
+        tree = etree.parse(BytesIO(data).decode('utf8'))
         # get document resource id
         resource_id = tree.xpath('gd:resourceId/text()', namespaces={'gd': 'http://schemas.google.com/g/2005'})
         if len(resource_id) != 1:
